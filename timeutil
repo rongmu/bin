@@ -1,0 +1,115 @@
+#!/usr/bin/env ruby
+# author: eric
+require 'optparse'
+class Tiime #{{{1
+  attr_reader :time
+
+  def initialize(t)
+    if t.class == Fixnum
+      # 由整数构造对象
+      @time = t
+    else
+      # 由字符构造对象
+      # 用正则式抽取数字字符,
+      digits = t.scan /\d+/
+      # 根据数组的元素个数进行判断
+      # 只有一个则全为秒，两个则为mm:ss，三个则是hh:mm:ss
+      # 全部转换为秒单位
+      case digits.length
+      when 1
+        @time = digits[0].to_i
+      when 2
+        @time = digits[0].to_i*60 + digits[1].to_i
+      when 3
+        @time = digits[0].to_i*3600 + digits[1].to_i*60 + digits[2].to_i
+      end
+    end
+  end
+
+  def + other
+    # 与other相加，并返回新Tiime对象
+    Tiime.new(@time + other.time)
+  end
+
+  def - other
+    # 与other求差，得绝对值并返回新Tiime对象
+    Tiime.new((@time - other.time).abs)
+  end
+
+  def to_s
+    # 输出字符串，以秒形式
+    @time.to_s
+  end
+
+  def to_hms
+    # 转成hh:mm:ss格式的字符串
+    h, h_left = @time/3600, @time%3600
+    m, s = h_left/60, h_left%60
+    format "%02d:%02d:%02d\n", h, m, s
+  end
+
+  def to_ms
+    # 转成mm:ss格式的字符串
+    m, s = @time/60, @time%60
+    format "%02d:%02d", m, s
+  end
+end
+
+OptionParser.new do |opts| #{{{1
+  # 帮助文档的顶部条
+  opts.banner =<<-END
+  Time Utility...
+  Usage: timeutil.rb time [options]
+  END
+
+  $options = {}
+
+  # 设定开关参数的初始值
+  $options[:to] = "sec"
+  # 设定开关
+  opts.on('-t TIME_FORMAT', '--to',
+          'output format: sec|ms|hms, omit: sec') \
+  do |format|
+    $options[:to] = format
+  end
+
+  $options[:add] = 0
+  opts.on('-a TIME', '--add', 'add given time') \
+  do |time|
+    $options[:add] = time 
+  end
+
+  $options[:minus] = 0
+  opts.on('-m TIME', '--minus', 'minus given time') \
+  do |time| 
+    $options[:minus] = time 
+  end
+
+  # 打印用法说明
+  opts.on('-h', '--help', 'display this screen') \
+  do 
+    puts opts 
+    exit 
+  end
+
+end.parse!  # 执行分析，从入口参数组中去除开关及其参数，留下操作对象本身
+
+# main {{{1
+if ARGV.length != 0
+  # 计算加减结果
+  result = Tiime.new(ARGV[0]) +
+           Tiime.new($options[:add]) - 
+           Tiime.new($options[:minus])
+  # 根据指定的输出格式输出
+  case $options[:to]
+  when "sec"
+    puts result.to_s
+  when "hms"
+    puts result.to_hms
+  when "ms"
+    puts result.to_ms
+  else
+    # 默认以秒单位输出
+    puts result.to_s
+  end
+end

@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+# usage: send this script and .seaf.yaml to device, and sync.
+# [todo] - sync per list
+require 'yaml'
+require 'highline/import'
+
+# constants
+SEAF_PATH = File.expand_path "~/.seafile-client"
+LIBRARY_DATA_PATH = File.expand_path "~/.seaf.yaml"
+Lib = Struct.new "Lib", :server, :account, :password, :name, :uuid, :dir
+
+# method
+def sync lib
+  puts "Name: #{lib.name}"
+  puts "UUID: #{lib.uuid}"
+  puts "Sync directory: #{lib.dir}"
+
+  cmd = %[seaf-cli sync -s '#{lib.server}' -l '#{lib.uuid}'
+          -d "#{lib.dir}" -u '#{lib.account}' -p '#{lib.password}']
+
+  if system cmd
+    sleep 5
+    puts "." * 24
+  end
+end
+
+# main
+# initialize seafile if hasn't
+system %[seaf-cli init -d #{SEAF_PATH}] if not Dir.exist? SEAF_PATH
+
+# read all libraries into lib_all
+lib_all = []
+data = File.open(LIBRARY_DATA_PATH) { |d| YAML.load d }
+data.each do |list|
+  # [todo] - ask for password only if there is unsynced libs in the list.
+  # get password for this list
+  puts "Server: #{list['server']}"
+  puts "Account: #{list['account']}"
+  password = ask("Your Password: ") { |q| q.echo = "*" }
+  puts "=" * 24
+
+  # add libraries into lib_all
+  list['libraries'].each do |lib|
+    lib_all << Lib.new( list['server'], list['account'], password,
+                        lib['name'], lib['uuid'],
+                        File.expand_path(lib['dir'])
+                      )
+  end
+end
+
+# get unsynced libraries
+synced_uuid = %x[seaf-cli list].scan /\h{8}-\h{4}-\h{4}-\h{4}-\h{12}/
+lib_unsynced = lib_all.delete_if { |l| synced_uuid.include? l.uuid }
+
+# sync libraries
+lib_unsynced.each do |lib|
+  if $? !=nil and not $?.success?
+    puts "[seaf-init]" + "\e[31m" + "Erro occured." + "\e[0m"
+    break
+  end
+
+  sync lib
+end

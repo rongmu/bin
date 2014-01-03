@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+# desc: get today's Tenseijingo column
+# author: eric
+require 'date'
+require 'moji'
+
+Encoding.default_internal = "UTF-8"
+
+# variables
+file = Dir.home + '/.sync/diudiudui/tensei/tensei.txt'
+
+today = Date.today
+yesterday = today.prev_day
+
+cache_dir = Dir.home + '/.sync/diudiudui/tensei/cache/'
+cache_file = cache_dir + "tensei-#{today.strftime '%y%m%d'}.txt"
+cache_file_yesterday = cache_dir + 
+                       "tensei-#{yesterday.strftime '%y%m%d'}.txt"
+
+title_date = Moji.han_to_zen "#{today.year}年　#{today.mon}月#{today.day}日"
+
+page_url = 'http://www.asahi.com/paper/column.html'
+element = '#MainInner .ArticleText'
+
+# main
+puts "tenseijingo downloader"
+
+if File.exist? cache_file
+  puts "today's job is already done."
+  exit
+end
+
+# get today's content
+require 'nokogiri'
+require 'open-uri'
+
+begin
+  puts "fetching web content..."
+  page = Nokogiri::HTML open(page_url, 'r:eucjp')
+rescue
+  p $!
+  puts "error occured, exit."
+  exit
+else
+  puts "content got"
+end
+
+content = page.css(element).text.strip
+success_message = "column is downloaded."
+
+# check newspaper holiday
+if File.exist? cache_file_yesterday
+  content_yesterday = File.read( cache_file_yesterday, 
+                                 { encoding: 'sjis' }
+                               ).chomp
+
+  if content == content_yesterday
+    content = "【休刊日】"
+    success_message = "oops, newspaper holiday :)"
+  end
+end
+
+# write cache
+File.open(cache_file, 'w:sjis') { |f| f.puts content }
+
+# add to file
+File.open file, 'a:sjis' do |f|
+  f.puts
+  f.puts "［＃５字下げ］#{title_date}［＃「#{title_date}」は中見出し］"
+  f.puts
+  f.puts content
+end
+
+# done
+puts success_message

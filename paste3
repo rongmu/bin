@@ -1,0 +1,14 @@
+#!/bin/sh
+if test $IS_PHONE != true ; then
+  case $DISTRO in
+    cygwin)
+      echo -n "$@" > /dev/clipboard
+      ;;
+    *)
+      echo -n "$@" | xsel -ib
+      echo -n "$@" | xsel -ip
+      ;;
+  esac
+fi
+
+echo "$@" > ~/.p

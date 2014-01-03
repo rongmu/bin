@@ -1,0 +1,30 @@
+#!/bin/zsh
+# after base system and DE is installed...
+pkg=(
+  base-devel abs
+  tp_smapi dosfstools
+  htop lsof net-tools strace
+  openssh ntp powertop lm_sensors rsync namcap
+  cmus wget aria2 opencc units xsel imagemagick
+  git hgsvn ctags 
+  dos2unix python2-eyed3 
+  ffmpeg vorbis-tools flac mediainfo
+  atool p7zip unrar file-roller
+  xorg-fonts-type1 ttf-freefont ttf-droid
+  gvim vim-systemd xterm
+  ibus ibus-rime
+  firefox firefox-i18n-zh-cn flashplugin
+  wine winetricks
+  virtualbox
+  jre7-openjdk jdk7-openjdk icedtea-web-java7
+  pidgin skype
+  uget
+  smplayer smplayer-themes vlc gecko-mediaplayer
+  puddletag
+  audacity
+  nomacs gimp
+  faenza-icon-theme
+  arch-wiki-lite arch-wiki-docs
+  )
+
+sudo pacman -S --needed $pkg

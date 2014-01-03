@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+# desc: gsettings automation based on yaml data
+# author: eric
+require 'yaml'
+
+data = File.expand_path "~/.gset.yaml"
+settings = YAML.load_file data
+
+general = settings['general']
+keybindings = settings['keybindings']
+
+def exc cmd
+  if system cmd
+    print "[" + "\e[32m" + "done" + "\e[0m" + "]" # done: green
+  else
+    print "[" + "\e[31m" + "failed" + "\e[0m" + "]" # failed: red
+  end
+
+  print cmd + "\n\n"
+end
+
+# general settings
+general.each do |cfg|
+  cfg['setting'].each do |key, value|
+    exc %[gsettings set #{cfg['schema']} #{key} "#{value}"]
+  end
+end
+
+# custom keybindings
+keybindings_path = []
+
+keybindings.size.times do |i|
+  path = "'/org/gnome/settings-daemon/plugins/media-keys/" + 
+         "custom-keybindings/custom#{i}/'"
+  keybindings_path << path
+
+  keybindings[i].each do |key, value|
+    exc %[gsettings set ] + 
+        %[org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:] +
+        %[#{path.delete "'"} #{key} "#{value}"]
+  end
+end
+
+exc %[gsettings set ] +
+    %[org.gnome.settings-daemon.plugins.media-keys custom-keybindings ] + 
+    %["[#{keybindings_path.join(", ")}]"]

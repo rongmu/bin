@@ -1,0 +1,17 @@
+#!/bin/zsh
+if ! tmux has-session -t m &> /dev/null; then
+  # create tmux "m" session if it isn't running.
+  tmux new -d -s m -n ra ranger
+  tmux new-window -t m:
+fi
+
+if [[ $1 != start ]]; then
+  # if not invoked as background autostart script,
+  # then tmux attach the session.
+  if [[ $DISTRO == cygwin || $IS_PHONE == true ]]; then
+    tmux attach -t m
+  else
+    # to maxmize window: --maximize
+    gnome-terminal -x tmux attach -t m
+  fi
+fi

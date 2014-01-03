@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+# desc: backup files according to a yaml file
+# author: eric
+require 'yaml'
+
+BACKUP_DIR_PREFIX = "#{Dir.home}/.sync/"
+DATA_PATH = "#{Dir.home}/.backup.yaml"
+
+def sync_exec args
+  rsync_opt = '--times --recursive'
+  file = args[:file]
+  dest = args[:dest]
+
+  if args[:relative] == true
+    rsync_opt << " --relative"
+    # don't sub! this will change args[:file] too.
+    file = file.sub(args[:strip], "") if args[:strip]
+  end
+
+  cmd = %[rsync #{rsync_opt} '#{file}' '#{dest}']
+
+  # pass "test" as command parameter to dry-run.
+  unless ARGV.include? "test"
+    if system cmd
+      print "[" + "\e[32m" + "done" + "\e[0m" + "]" # done: green
+    else
+      print "[" + "\e[31m" + "failed" + "\e[0m" + "]" # failed: red
+    end
+    puts args[:file]
+  else
+    puts cmd
+  end
+end
+
+def sync list
+  dest = BACKUP_DIR_PREFIX + list['backup_dir']
+  # relative copy
+  if list['relative_copy'] == true
+    # if need to strip prefix
+    if list['strip_prefix']
+      Dir.chdir list['strip_prefix'] do
+        list['files'].each do |file|
+          sync_exec file: file,
+                    dest: dest,
+                    relative: true,
+                    strip: list['strip_prefix']
+        end
+      end
+    # standard relative copy
+    else
+      list['files'].each do |file|
+        sync_exec file: file,
+                  dest: dest,
+                  relative: true
+      end
+    end
+  # normal copy
+  else
+    list['files'].each do |file|
+      sync_exec file: file, dest: dest
+    end
+  end
+end
+
+# main
+data = File.open(DATA_PATH) { |f| YAML.load f }
+data.each do |list|
+  if ARGV.include? "test"
+    print "\e[32m"
+      print list['strip_prefix'] + ' ' if list['strip_prefix']
+      print  "=> #{BACKUP_DIR_PREFIX}#{list['backup_dir']}"
+    print "\e[0m" + "\n"
+  end
+
+  sync list
+end

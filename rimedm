@@ -1,0 +1,9 @@
+#/bin/sh
+# desc: rime dict manager
+rime_conf_dir=$HOME/.config/ibus/rime
+
+# change directory in a subshell.
+(
+cd $rime_conf_dir
+rime_dict_manager "$@"
+)

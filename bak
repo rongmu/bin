@@ -9,13 +9,12 @@ DATA_PATH = "#{Dir.home}/.backup.yaml"
 
 def sync_exec args
   rsync_opt = '--times --recursive'
-  file = args[:file]
-  dest = args[:dest]
+  file = args[:file].dup
+  dest = args[:dest].dup
 
   if args[:relative] == true
     rsync_opt << " --relative"
-    # don't sub! this will change args[:file] too.
-    file = file.sub(args[:strip], "") if args[:strip]
+    file.sub!(args[:strip], "") if args[:strip]
   end
 
   cmd = %[rsync #{rsync_opt} '#{file}' '#{dest}']

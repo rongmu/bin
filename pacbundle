@@ -11,6 +11,7 @@ pkg=(
   ffmpeg vorbis-tools flac mediainfo
   atool p7zip unrar file-roller
   xorg-fonts-type1 ttf-freefont ttf-droid
+  wqy-bitmapfont wqy-microhei wqy-zenhei
   gvim vim-systemd xterm
   ibus ibus-rime
   firefox firefox-i18n-zh-cn flashplugin
@@ -23,7 +24,6 @@ pkg=(
   puddletag
   audacity
   nomacs gimp
-  faenza-icon-theme
   arch-wiki-lite arch-wiki-docs
   )
 

@@ -3,7 +3,7 @@
 pkg=(
   base-devel abs
   tp_smapi dosfstools
-  htop lsof net-tools strace
+  htop lsof net-tools dnsutils strace
   openssh ntp powertop lm_sensors rsync namcap
   cmus wget aria2 opencc units xsel imagemagick
   git hgsvn ctags 

@@ -1,8 +1,13 @@
 #!/bin/zsh
+# [todo] - /bin/zsh => /bin/sh
 if ! tmux has-session -t m &> /dev/null; then
   # create tmux "m" session if it isn't running.
-  tmux new -d -s m -n ra ranger
-  tmux new-window -t m:
+  if [[ $DISTRO == cygwin ]]; then
+    tmux new -d -s m
+  else
+    tmux new -d -s m -n ra ranger
+    tmux new-window -t m:
+  fi
 fi
 
 if [[ $1 != start ]]; then

@@ -23,7 +23,7 @@ end
 # general settings
 general.each do |cfg|
   cfg['setting'].each do |key, value|
-    exc %[gsettings set #{cfg['schema']} #{key} "#{value}"]
+    exc "gsettings set #{cfg['schema']} #{key} \"#{value}\""
   end
 end
 
@@ -36,12 +36,12 @@ keybindings.size.times do |i|
   keybindings_path << path
 
   keybindings[i].each do |key, value|
-    exc %[gsettings set ] + 
-        %[org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:] +
-        %[#{path} #{key} "#{value}"]
+    exc "gsettings set " +
+        "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:" +
+        "#{path} #{key} \"#{value}\""
   end
 end
 
-exc %[gsettings set ] +
-    %[org.gnome.settings-daemon.plugins.media-keys custom-keybindings ] + 
-    %["[%s]"] % keybindings_path.map{|p|"'#{p}'"}.join(", ")
+exc "gsettings set " +
+    "org.gnome.settings-daemon.plugins.media-keys custom-keybindings " +
+    '"[' + keybindings_path.map{|p|"'#{p}'"}.join(", ") + ']"'

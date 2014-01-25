@@ -44,4 +44,4 @@ end
 
 exc %[gsettings set ] +
     %[org.gnome.settings-daemon.plugins.media-keys custom-keybindings ] + 
-    %["[#{keybindings_path.map{|p|"'#{p}'"}.join(", ")}]"]
+    %["[%s]"] % keybindings_path.map{|p|"'#{p}'"}.join(", ")

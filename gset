@@ -31,17 +31,17 @@ end
 keybindings_path = []
 
 keybindings.size.times do |i|
-  path = "'/org/gnome/settings-daemon/plugins/media-keys/" + 
-         "custom-keybindings/custom#{i}/'"
+  path = "/org/gnome/settings-daemon/plugins/media-keys/" + 
+         "custom-keybindings/custom#{i}/"
   keybindings_path << path
 
   keybindings[i].each do |key, value|
     exc %[gsettings set ] + 
         %[org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:] +
-        %[#{path.delete "'"} #{key} "#{value}"]
+        %[#{path} #{key} "#{value}"]
   end
 end
 
 exc %[gsettings set ] +
     %[org.gnome.settings-daemon.plugins.media-keys custom-keybindings ] + 
-    %["[#{keybindings_path.join(", ")}]"]
+    %["[#{keybindings_path.map{|p|"'#{p}'"}.join(", ")}]"]

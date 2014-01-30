@@ -31,7 +31,7 @@ end
 keybindings_path = []
 
 keybindings.size.times do |i|
-  path = "/org/gnome/settings-daemon/plugins/media-keys/" + 
+  path = "/org/gnome/settings-daemon/plugins/media-keys/" +
          "custom-keybindings/custom#{i}/"
   keybindings_path << path
 

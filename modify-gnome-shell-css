@@ -5,7 +5,7 @@
 import_line='@import url("mod.css");'
 shell_css=/usr/share/gnome-shell/theme/gnome-shell.css
 
-if grep "$import_line" "$shell_css" > /dev/null; then
+if grep -F "$import_line" "$shell_css" > /dev/null; then
   echo "mod.css already imported."
 else
   sudo sed "1i $import_line" -i "$shell_css" &&

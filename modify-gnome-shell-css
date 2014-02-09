@@ -1,0 +1,13 @@
+#!/bin/sh
+# desc: import mod.css in gnome-shell.css
+# note: make sure mod.css is symlinked to the same folder as gnome-shell.css
+
+import_line='@import url("mod.css");'
+shell_css=/usr/share/gnome-shell/theme/gnome-shell.css
+
+if grep "$import_line" "$shell_css" > /dev/null; then
+  echo "mod.css already imported."
+else
+  sudo sed "1i $import_line" -i "$shell_css" &&
+  echo "successfully imported mod.css"
+fi

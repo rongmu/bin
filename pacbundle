@@ -6,7 +6,7 @@ pkg=(
   htop lsof net-tools dnsutils strace
   openssh ntp powertop lm_sensors rsync namcap
   cmus wget aria2 opencc units xsel imagemagick
-  git hgsvn ctags 
+  git hub hgsvn ctags 
   dos2unix python2-eyed3 
   ffmpeg vorbis-tools flac mediainfo
   atool p7zip unrar file-roller

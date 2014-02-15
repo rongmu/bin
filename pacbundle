@@ -14,7 +14,7 @@ pkg=(
   wqy-bitmapfont wqy-microhei wqy-zenhei
   gvim vim-systemd xterm
   ibus ibus-rime
-  firefox firefox-i18n-zh-cn flashplugin
+  flashplugin
   wine winetricks
   virtualbox
   jre7-openjdk jdk7-openjdk icedtea-web-java7

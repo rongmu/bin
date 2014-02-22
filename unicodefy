@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+require 'charlock_holmes/string'
+
+def transcode path
+  content = File.read(path, { mode: "rt"})
+  encoding = content.detect_encoding[:encoding]
+
+  case encoding
+  when "UTF-8", "ISO-8859-1"
+    return
+  else
+    puts path
+
+    begin
+      content.force_encoding(encoding).encode!("utf-8")
+    rescue
+      puts "\e[31m" + "error: #{$!}" + "\e[0m"
+    else
+      File.open(path, 'w:utf-8') { |f| f.puts content }
+      puts "\e[32m" + "succesfully transcoded" + "\e[0m"
+    end
+  end
+end
+
+ARGV.each { |arg| transcode arg }

@@ -37,7 +37,7 @@ require 'open-uri'
 
 begin
   puts "fetching web content..."
-  page = Nokogiri::HTML open(page_url, 'r:eucjp')
+  page = Nokogiri::HTML open(page_url, 'r:utf-8')
 rescue
   p $!
   puts "error occured, exit."
@@ -52,7 +52,7 @@ success_message = "column is downloaded."
 # check newspaper holiday
 if File.exist? cache_file_yesterday
   content_yesterday = File.read( cache_file_yesterday, 
-                                 { encoding: 'sjis' }
+                                 { encoding: 'utf-8' }
                                ).chomp
 
   if content == content_yesterday
@@ -62,10 +62,10 @@ if File.exist? cache_file_yesterday
 end
 
 # write cache
-File.open(cache_file, 'w:sjis') { |f| f.puts content }
+File.open(cache_file, 'w:utf-8') { |f| f.puts content }
 
 # add to file
-File.open file, 'a:sjis' do |f|
+File.open file, 'a:utf-8' do |f|
   f.puts
   f.puts "［＃５字下げ］#{title_date}［＃「#{title_date}」は中見出し］"
   f.puts

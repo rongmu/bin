@@ -17,8 +17,8 @@ def transcode path
     rescue
       puts "\e[31m" + "error: #{$!}" + "\e[0m"
     else
-      File.open(path, 'w:utf-8') { |f| f.puts content }
-      puts "\e[32m" + "succesfully transcoded" + "\e[0m"
+      File.open(path, 'w:utf-8') { |f| f.print content }
+      puts "\e[32m" + "succesfully transcoded from #{encoding}" + "\e[0m"
     end
   end
 end

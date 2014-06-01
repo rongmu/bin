@@ -13,10 +13,10 @@ fi
 if [[ $1 != start ]]; then
   # if not invoked as background autostart script,
   # then tmux attach the session.
-  if [[ $DISTRO == cygwin || $IS_PHONE == true ]]; then
+  #if [[ $DISTRO == cygwin || $IS_PHONE == true ]]; then
     tmux attach -t m
-  else
+  #else
     # to maxmize window: --maximize
-    gnome-terminal -x tmux attach -t m
-  fi
+  #  gnome-terminal -x tmux attach -t m
+  #fi
 fi

@@ -28,6 +28,8 @@ general.each do |cfg|
 end
 
 # custom keybindings
+exit if keybindings == nil
+
 keybindings_path = []
 
 keybindings.size.times do |i|

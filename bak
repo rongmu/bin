@@ -4,7 +4,7 @@
 # author: eric
 require 'yaml'
 
-BACKUP_DIR_PREFIX = "#{Dir.home}/.sync/"
+BACKUP_DIR_PREFIX = "#{Dir.home}/.sync/Seafile/"
 DATA_PATH = "#{Dir.home}/.backup.yaml"
 
 def sync_exec args

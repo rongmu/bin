@@ -1,5 +1,5 @@
-#!/bin/zsh
-# [todo] - /bin/zsh => /bin/sh
+#!/bin/bash
+# [todo] => /bin/sh
 if ! tmux has-session -t m &> /dev/null; then
   # create tmux "m" session if it isn't running.
   if [[ $DISTRO == cygwin ]]; then

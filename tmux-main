@@ -5,7 +5,7 @@ if ! tmux has-session -t m &> /dev/null; then
   if [[ $DISTRO == cygwin ]]; then
     tmux new -d -s m
   else
-    tmux new -d -s m -n ra ranger
+    tmux new -d -s m -n ra 'TERM=screen-256color ranger'
     tmux new-window -t m:
   fi
 fi

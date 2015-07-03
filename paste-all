@@ -1,0 +1,18 @@
+#!/bin/sh
+# desc: use this as a filter
+buffer="$HOME/.p"
+
+cat > "$buffer"
+
+if test $IS_PHONE != true ; then
+  case $DISTRO in
+    cygwin)
+      cat "$buffer" > /dev/clipboard
+      ;;
+    *)
+      cat "$buffer" | xsel --input --primary
+      cat "$buffer" | xsel --input --clipboard
+      ;;
+  esac
+fi
+
